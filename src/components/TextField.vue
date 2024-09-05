@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-const props = defineProps<{text:string}>()
+const text = ref('')
 
-const emit = defineEmits(['handleSubmit', 'updateText'])
-const currentText = ref(props.text)
-console.log(currentText)
-
-
-// 親コンポーネントのtextが変更されたときに現在の状態を更新
-watch(() => props.text, (newText) => {
-  currentText.value = newText
-  emit('updateText', newText)
-})
+const emit = defineEmits(['handleSubmit'])
 
 const emitHandle = () => {
-  emit('handleSubmit', currentText.value)
-  currentText.value = '' // 入力フィールドをクリア
+  emit('handleSubmit', text.value)
+  text.value = '' // 入力フィールドをクリア
 }
 
 const rules = [
@@ -40,7 +31,7 @@ const rules = [
     @submit.prevent="emitHandle"
   >
     <v-text-field
-      v-model="currentText"
+      v-model="text"
       :rules="rules"
       hide-details="auto"
       clearable

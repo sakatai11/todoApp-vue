@@ -2,12 +2,23 @@
 import type { CardsProps } from '@/types/cards';
 
 type EventProps = {
-  toggle: (id: number) => void
-  deleteBtn: (id: number) => void
+  // toggle: (id: number) => void
+  // deleteBtn: (id: number) => void
   todos: CardsProps[]
 }
 
 const props = defineProps<EventProps>()
+const emit = defineEmits(['toggleBtn','deleteBtn'])
+
+const emitToggle = (id: number) => {
+  emit('toggleBtn', id)
+}
+
+const emitDelete = (id: number) => {
+  emit('deleteBtn', id)
+}
+
+
 </script>
 <template>
   <v-container>
@@ -25,7 +36,7 @@ const props = defineProps<EventProps>()
                   color="rgb(225 225 225)"
                   density="compact"
                   icon="mdi-check-circle"
-                  @click="props.toggle(id)"
+                  @click="emitToggle(id)"
                 />
               </template>
               <template v-else>
@@ -34,7 +45,7 @@ const props = defineProps<EventProps>()
                   color="success"
                   density="compact"
                   icon="mdi-check-circle"
-                  @click="toggle(id)"
+                  @click="emitToggle(id)"
                 />
               </template>
               <v-card-title class="text-h5">
@@ -42,7 +53,7 @@ const props = defineProps<EventProps>()
               </v-card-title>
             </div>
             <div class="d-flex justify-center ga-5">
-              <v-btn color="error" variant="outlined" type="submit" @click="props.deleteBtn(id)">削除</v-btn>
+              <v-btn color="error" variant="outlined" type="submit" @click="emitDelete(id)">削除</v-btn>
             </div>
           </v-card>
         </template>

@@ -3,7 +3,6 @@ import { ref, watch, onMounted } from 'vue'
 import type { CardsProps } from './types/cards'
 import TextField from './components/TextField.vue';
 import TodoList from './components/TodoList.vue';
-const text = ref('')
 const todoCards = ref<CardsProps[]>([])
 
 // ローカルストレージからデータを取得
@@ -33,13 +32,8 @@ const handleSubmit = (textValue:string) => {
   }
 }
 
-// テキストの更新処理
-const updateText = (newText: string) => {
-  text.value = newText
-}
-
 // 完了(トグル)
-const toggle = (id: number) => {
+const toggleBtn = (id: number) => {
   const card = todoCards.value.find((card) => card.id === id)
   if (card) {
     card.bool = !card.bool
@@ -58,8 +52,8 @@ const deleteBtn = (id: number) => {
     <!-- 内側に記述する -->
     <v-main>
       <v-container max-width="767px">
-        <TextField @handleSubmit="handleSubmit" @updateText="updateText" :text="text" />
-        <TodoList :toggle="toggle" :delete-btn="deleteBtn" :todos="todoCards" />
+        <TextField @handleSubmit="handleSubmit" />
+        <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards" />
       </v-container>
     </v-main>
     <!-- 内側に記述する -->
