@@ -1,13 +1,8 @@
 <script setup lang="ts">
 import type { CardsProps } from '@/types/cards';
 
-type EventProps = {
-  // toggle: (id: number) => void
-  // deleteBtn: (id: number) => void
-  todos: CardsProps[]
-}
 
-const props = defineProps<EventProps>()
+defineProps<{todos:CardsProps[]}>()
 const emit = defineEmits(['toggleBtn','deleteBtn'])
 
 const emitToggle = (id: number) => {
