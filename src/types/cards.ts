@@ -4,3 +4,4 @@ export type CardsProps = {
   textValue: string
   bool: boolean
 }
+

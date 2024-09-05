@@ -1,40 +1,55 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import type { CardsProps } from './types/cards'
-
+import TextField from './components/TextField.vue';
+import TodoList from './components/TodoList.vue';
 const text = ref('')
 const todoCards = ref<CardsProps[]>([])
 
-const rules = [
-  (inputValue: string) => {
-    // バリデーションをスキップする条件を追加
-    if (inputValue === '') {
-      return true
-    }
-    if (!inputValue) {
-      return '項目を入力してください'
-    }
-    return true
+// ローカルストレージからデータを取得
+onMounted(() => {
+  const savedTodos = localStorage.getItem('todoCards')
+  if (savedTodos) {
+    todoCards.value = JSON.parse(savedTodos)
   }
-]
+})
 
-const handleSubmit = () => {
-  if (!text.value) {
+// todoCardsが変更されるたびにローカルストレージに保存
+watch(todoCards, (newTodos) => {
+  localStorage.setItem('todoCards', JSON.stringify(newTodos))
+}, { deep: true })
+
+
+// todo追加
+const handleSubmit = (textValue:string) => {
+  if (!textValue) {
     return
   } else {
-    const newId = todoCards.value.length ? todoCards.value[todoCards.value.length - 1].id + 1 : 1
-    todoCards.value.push({ id: newId, textValue: text.value, bool: false })
-    text.value = '' // 入力フィールドをクリア
+    const newId = todoCards.value.length ? Math.max(...todoCards.value.map(card => card.id)) + 1 : 1
+    todoCards.value.push({ id: newId, textValue: textValue, bool: false })
+    todoCards.value.sort((a, b) => b.id - a.id)
     console.log('Form submitted:', todoCards.value)
     return true
   }
 }
 
+// テキストの更新処理
+const updateText = (newText: string) => {
+  text.value = newText
+}
+
+// 完了(トグル)
 const toggle = (id: number) => {
   const card = todoCards.value.find((card) => card.id === id)
   if (card) {
     card.bool = !card.bool
   }
+  console.log(todoCards.value)
+}
+
+// 削除
+const deleteBtn = (id: number) => {
+  todoCards.value = todoCards.value.filter(card => card.id !== id)
 }
 </script>
 
@@ -43,71 +58,10 @@ const toggle = (id: number) => {
     <!-- 内側に記述する -->
     <v-main>
       <v-container max-width="767px">
-        <div class="mt-5">
-          <v-form
-            class="d-flex justify-center ga-5 pr-4 pl-4 mb-4"
-            @submit.prevent="handleSubmit()"
-          >
-            <v-text-field
-              v-model="text"
-              :rules="rules"
-              hide-details="auto"
-              clearable
-              label="入力"
-              max-width="400px"
-            />
-            <v-btn color="success" type="submit">追加</v-btn>
-          </v-form>
-        </div>
-
-        <v-container>
-          <div class="list-box border-sm">
-            <v-container>
-              <template v-for="{ id, textValue, bool } in todoCards" :key="id">
-                <v-card
-                  class="mx-auto px-6 py-2 mb-4 d-flex justify-space-between align-center"
-                  :color="bool ? 'rgb(225 225 225)' : ''"
-                >
-                  <div class="d-flex justify-center align-center ga-5">
-                    <template v-if="!bool">
-                      <v-btn
-                        variant="text"
-                        color="rgb(225 225 225)"
-                        density="compact"
-                        icon="mdi-check-circle"
-                        @click="toggle(id)"
-                      />
-                    </template>
-                    <template v-else>
-                      <v-btn
-                        variant="text"
-                        color="success"
-                        density="compact"
-                        icon="mdi-check-circle"
-                        @click="toggle(id)"
-                      />
-                    </template>
-                    <v-card-title class="text-h5">
-                      {{ textValue }}
-                    </v-card-title>
-                  </div>
-                  <div class="d-flex justify-center ga-5">
-                    <v-btn color="error" variant="outlined" type="submit">削除</v-btn>
-                  </div>
-                </v-card>
-              </template>
-            </v-container>
-          </div>
-        </v-container>
+        <TextField @handleSubmit="handleSubmit" @updateText="updateText" :text="text" />
+        <TodoList :toggle="toggle" :delete-btn="deleteBtn" :todos="todoCards" />
       </v-container>
     </v-main>
     <!-- 内側に記述する -->
   </v-app>
 </template>
-<style scoped>
-.list-box {
-  height: 600px;
-  width: 100%;
-  overflow-y: auto;
-}
-</style>
