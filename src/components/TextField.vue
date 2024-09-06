@@ -10,19 +10,6 @@ const emitHandle = () => {
   text.value = '' // 入力フィールドをクリア
 }
 
-const rules = [
-  (inputValue: string) => {
-    // バリデーションをスキップする条件を追加
-    if (inputValue === '') {
-      return true
-    }
-    if (!inputValue) {
-      return '項目を入力してください'
-    }
-    return true
-  }
-]
-
 </script>
 <template>
   <div class="mt-5">
@@ -32,7 +19,6 @@ const rules = [
   >
     <v-text-field
       v-model="text"
-      :rules="rules"
       hide-details="auto"
       clearable
       label="入力"

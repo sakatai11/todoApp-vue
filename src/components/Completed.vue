@@ -16,10 +16,10 @@ const emitDelete = (id: number) => {
 </script>
 <template>
   <v-container>
-    <h3 class="text-center mb-4">todo</h3>
+    <h3 class="text-center mb-4">completed</h3>
     <div class="list-box border-sm">
       <v-container>
-        <template v-for="{ id, textValue, bool } in todos.filter(todo => !todo.bool)" :key="id">
+        <template v-for="{ id, textValue, bool } in todos.filter(todo => todo.bool)" :key="id">
           <v-card
             class="mx-auto px-6 py-2 mb-4 d-flex justify-space-between align-center"
             :color="bool ? 'rgb(225 225 225)' : ''"

@@ -3,6 +3,7 @@ import { ref, watch, onMounted } from 'vue'
 import type { CardsProps } from './types/cards'
 import TextField from './components/TextField.vue';
 import TodoList from './components/TodoList.vue';
+import Completed from './components/Completed.vue';
 const todoCards = ref<CardsProps[]>([])
 
 // ローカルストレージからデータを取得
@@ -22,6 +23,7 @@ watch(todoCards, (newTodos) => {
 // todo追加
 const handleSubmit = (textValue:string) => {
   if (!textValue) {
+    alert('項目を入力してください')
     return
   } else {
     const newId = todoCards.value.length ? Math.max(...todoCards.value.map(card => card.id)) + 1 : 1
@@ -51,9 +53,12 @@ const deleteBtn = (id: number) => {
   <v-app>
     <!-- 内側に記述する -->
     <v-main>
-      <v-container max-width="767px">
+      <v-container max-width="1000px">
         <TextField @handleSubmit="handleSubmit" />
-        <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards" />
+        <div class="d-flex justify-center align-center flex-column flex-md-row">
+          <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards" />
+          <Completed @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards"  />
+        </div>
       </v-container>
     </v-main>
     <!-- 内側に記述する -->
