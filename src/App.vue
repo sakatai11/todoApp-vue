@@ -23,7 +23,6 @@ watch(todoCards, (newTodos) => {
 // todo追加
 const handleSubmit = (textValue:string) => {
   if (!textValue) {
-    alert('項目を入力してください')
     return
   } else {
     const newId = todoCards.value.length ? Math.max(...todoCards.value.map(card => card.id)) + 1 : 1

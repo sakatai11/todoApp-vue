@@ -2,6 +2,7 @@
 import type { CardsProps } from '@/types/cards';
 
 defineProps<{todos:CardsProps[]}>()
+
 const emit = defineEmits(['toggleBtn','deleteBtn'])
 
 const emitToggle = (id: number) => {

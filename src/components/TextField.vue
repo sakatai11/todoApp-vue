@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-const text = ref('')
+const inputVal = ref({
+  text: '',
+  error: ''
+})
 
 const emit = defineEmits(['handleSubmit'])
 
 const emitHandle = () => {
-  emit('handleSubmit', text.value)
-  text.value = '' // 入力フィールドをクリア
+  if (!inputVal.value.text) {
+    inputVal.value.error = '文字を入力してください';
+  } else {
+    emit('handleSubmit', inputVal.value.text)
+    inputVal.value.text = '' // 入力フィールドをクリア
+    inputVal.value.error = '' // エラーメッセージをクリア
+  }
 }
 
 </script>
@@ -18,9 +26,9 @@ const emitHandle = () => {
     @submit.prevent="emitHandle"
   >
     <v-text-field
-      v-model="text"
+      v-model="inputVal.text"
       hide-details="auto"
-      clearable
+      :error-messages="inputVal.error ? inputVal.error : null"
       label="入力"
       max-width="400px"
     />
