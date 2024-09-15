@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import type { CardsProps } from '@/types/cards';
+import type { CardsProps } from '@/types/cards';;
 
 defineProps<{todos:CardsProps[]}>()
 
-const emit = defineEmits(['toggleBtn','deleteBtn'])
-
-const emitToggle = (id: number) => {
-  emit('toggleBtn', id)
-}
-
-const emitDelete = (id: number) => {
-  emit('deleteBtn', id)
-}
-
+const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
 
 </script>
 <template>
@@ -20,7 +11,7 @@ const emitDelete = (id: number) => {
     <h3 class="text-center mb-4">todo</h3>
     <div class="list-box border-sm">
       <v-container>
-        <template v-for="{ id, textValue, bool } in todos.filter(todo => !todo.bool)" :key="id">
+        <template v-for="{ id, textValue, editBool ,bool } in todos.filter(todo => !todo.bool)" :key="id">
           <v-card
             class="mx-auto px-6 py-2 mb-4 d-flex justify-space-between align-center"
             :color="bool ? 'rgb(225 225 225)' : ''"
@@ -32,7 +23,7 @@ const emitDelete = (id: number) => {
                   color="rgb(225 225 225)"
                   density="compact"
                   icon="mdi-check-circle"
-                  @click="emitToggle(id)"
+                  @click="emit('toggleBtn', id)"
                 />
               </template>
               <template v-else>
@@ -41,15 +32,26 @@ const emitDelete = (id: number) => {
                   color="success"
                   density="compact"
                   icon="mdi-check-circle"
-                  @click="emitToggle(id)"
+                  @click="emit('toggleBtn', id)"
                 />
               </template>
-              <v-card-title class="text-h6">
-                {{ textValue }}
-              </v-card-title>
+              <template v-if="editBool">
+                <v-text-field
+                  :value="textValue"
+                  width="250px"
+                  variant="underlined"
+                  @input="emit('updateText', id, $event.target.value)"
+                />
+              </template>
+              <template v-else>
+                <v-card-title class="text-h6">
+                  {{ textValue }}
+                </v-card-title>
+              </template>
             </div>
             <div class="d-flex justify-center ga-5">
-              <v-btn color="error" variant="outlined" type="submit" @click="emitDelete(id)">削除</v-btn>
+              <v-btn color="error" variant="outlined" type="submit" @click="emit('editBtn', id)">{{ editBool ? '保存' : '編集' }}</v-btn>
+              <v-btn color="error" variant="outlined" type="submit" @click="emit('deleteBtn', id)">削除</v-btn>
             </div>
           </v-card>
         </template>

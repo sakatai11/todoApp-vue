@@ -9,9 +9,12 @@ const todoCards = ref<CardsProps[]>([])
 // ローカルストレージからデータを取得
 onMounted(() => {
   const savedTodos = localStorage.getItem('todoCards')
-  if (savedTodos) {
-    todoCards.value = JSON.parse(savedTodos)
+  console.log(savedTodos)
+  if (!savedTodos) {
+    return
   }
+
+  todoCards.value = JSON.parse(savedTodos)
 })
 
 // todoCardsが変更されるたびにローカルストレージに保存
@@ -26,10 +29,18 @@ const handleSubmit = (textValue:string) => {
     return
   } else {
     const newId = todoCards.value.length ? Math.max(...todoCards.value.map(card => card.id)) + 1 : 1
-    todoCards.value.push({ id: newId, textValue: textValue, bool: false })
+    todoCards.value.push({ id: newId, textValue: textValue, editBool: false ,bool: false })
     todoCards.value.sort((a, b) => b.id - a.id)
     console.log('Form submitted:', todoCards.value)
     return true
+  }
+}
+
+// テキスト更新
+const updateText = (id: number, newText: string) => {
+  const card = todoCards.value.find((card) => card.id === id)
+  if (card) {
+    card.textValue = newText
   }
 }
 
@@ -38,6 +49,15 @@ const toggleBtn = (id: number) => {
   const card = todoCards.value.find((card) => card.id === id)
   if (card) {
     card.bool = !card.bool
+  }
+  console.log(todoCards.value)
+}
+
+// 編集ボタン
+const editBtn = (id: number) => {
+  const card = todoCards.value.find((card) => card.id === id)
+  if (card) {
+    card.editBool = !card.editBool
   }
   console.log(todoCards.value)
 }
@@ -55,7 +75,7 @@ const deleteBtn = (id: number) => {
       <v-container max-width="1000px">
         <TextField @handleSubmit="handleSubmit" />
         <div class="d-flex justify-center align-center flex-column flex-md-row">
-          <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards" />
+          <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" @edit-btn="editBtn" @updateText="updateText" :todos="todoCards" />
           <Completed @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards"  />
         </div>
       </v-container>
