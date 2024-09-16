@@ -5,6 +5,7 @@ import TextField from './components/TextField.vue';
 import TodoList from './components/TodoList.vue';
 import Completed from './components/Completed.vue';
 const todoCards = ref<CardsProps[]>([])
+// const newText = ref('')
 
 // ローカルストレージからデータを取得
 onMounted(() => {
@@ -58,6 +59,7 @@ const editBtn = (id: number) => {
   const card = todoCards.value.find((card) => card.id === id)
   if (card) {
     card.editBool = !card.editBool
+    // card.textValue = newText
   }
   console.log(todoCards.value)
 }
@@ -75,7 +77,7 @@ const deleteBtn = (id: number) => {
       <v-container max-width="1000px">
         <TextField @handleSubmit="handleSubmit" />
         <div class="d-flex justify-center align-center flex-column flex-md-row">
-          <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" @edit-btn="editBtn" @updateText="updateText" :todos="todoCards" />
+          <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" @edit-btn="editBtn" @update-text="updateText" :todos="todoCards" />
           <Completed @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards"  />
         </div>
       </v-container>

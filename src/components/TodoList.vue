@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import type { CardsProps } from '@/types/cards';;
+import type { CardsProps } from '@/types/cards';
+import { ref } from 'vue';
 
-defineProps<{todos:CardsProps[]}>()
+defineProps<{ 
+  todos: CardsProps[], 
+}>()
+
 
 const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
 
@@ -35,12 +39,17 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                   @click="emit('toggleBtn', id)"
                 />
               </template>
-              <template v-if="editBool">
-                <v-text-field
-                  :value="textValue"
+              <template v-if="editBool && id">
+                <input
                   width="250px"
+                  :value=textValue
                   variant="underlined"
-                  @input="emit('updateText', id, $event.target.value)"
+                  @input="(e) => {
+                    const target = e.target as HTMLInputElement;
+                    if (target) {
+                      emit('updateText', id, target.value);
+                    }
+                  }"
                 />
               </template>
               <template v-else>
