@@ -39,9 +39,8 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                   @click="emit('toggleBtn', id)"
                 />
               </template>
-              <template v-if="editBool && id">
+              <div class="inputTag" v-if="editBool && id">
                 <input
-                  width="250px"
                   :value=textValue
                   variant="underlined"
                   @input="(e) => {
@@ -50,8 +49,9 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                       emit('updateText', id, target.value);
                     }
                   }"
+                  class="custom-width"
                 />
-              </template>
+                </div>
               <template v-else>
                 <v-card-title class="text-h6">
                   {{ textValue }}
@@ -59,8 +59,13 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
               </template>
             </div>
             <div class="d-flex justify-center ga-5">
-              <v-btn color="error" variant="outlined" type="submit" @click="emit('editBtn', id)">{{ editBool ? '保存' : '編集' }}</v-btn>
-              <v-btn color="error" variant="outlined" type="submit" @click="emit('deleteBtn', id)">削除</v-btn>
+              <template v-if="editBool">
+                <v-btn color="blue" variant="outlined" type="submit" value="flat" @click="emit('editBtn', id)">保存</v-btn>
+              </template>
+              <template v-else>
+                <v-btn color="blue" type="submit" value="flat" @click="emit('editBtn', id)">編集</v-btn>
+              </template>
+              <v-btn color="error" type="submit" @click="emit('deleteBtn', id)">削除</v-btn>
             </div>
           </v-card>
         </template>
@@ -73,5 +78,19 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
   height: 600px;
   width: 100%;
   overflow-y: auto;
+}
+
+.inputTag {
+  padding: 0.5rem 1rem;
+  line-height: 1.6;
+}
+
+.custom-width {
+  width: 100%;
+  font-size: 1.25rem;
+}
+
+.custom-font-color {
+  color: #FFF;
 }
 </style>
