@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { CardsProps } from '@/types/cards';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 defineProps<{ 
   todos: CardsProps[], 
@@ -49,7 +49,7 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                       emit('updateText', id, target.value);
                     }
                   }"
-                  class="custom-width"
+                  :class="{ 'custom-width': textValue, 'error': !textValue }"
                 />
                 </div>
               <template v-else>
@@ -60,7 +60,7 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
             </div>
             <div class="d-flex justify-center ga-5">
               <template v-if="editBool">
-                <v-btn color="blue" variant="outlined" type="submit" value="flat" @click="emit('editBtn', id)">保存</v-btn>
+                <v-btn color="blue" variant="outlined" type="submit" value="flat" @click="() => textValue ? emit('editBtn', id) : null">保存</v-btn>
               </template>
               <template v-else>
                 <v-btn color="blue" type="submit" value="flat" @click="emit('editBtn', id)">編集</v-btn>
@@ -92,5 +92,11 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
 
 .custom-font-color {
   color: #FFF;
+}
+
+.error {
+  width: 100%;
+  border: 2px solid red;
+  background-color: rgb(255, 180, 180);
 }
 </style>
