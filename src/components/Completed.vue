@@ -3,14 +3,14 @@ import type { CardsProps } from '@/types/cards';
 
 defineProps<{todos:CardsProps[]}>()
 
-const emit = defineEmits(['toggleBtn','deleteBtn'])
+const emit = defineEmits(['update:toggleBtn','update:deleteBtn'])
 
 const emitToggle = (id: number) => {
-  emit('toggleBtn', id)
+  emit('update:toggleBtn', id)
 }
 
 const emitDelete = (id: number) => {
-  emit('deleteBtn', id)
+  emit('update:deleteBtn', id)
 }
 
 

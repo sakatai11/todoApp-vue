@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { CardsProps } from '@/types/cards';
-import { computed, ref } from 'vue';
 
 defineProps<{ 
   todos: CardsProps[], 
 }>()
 
 
-const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
+const emit = defineEmits(['update:toggleBtn','update:deleteBtn','update:editBtn', 'update:text'])
 
 </script>
 <template>
@@ -27,7 +26,7 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                   color="rgb(225 225 225)"
                   density="compact"
                   icon="mdi-check-circle"
-                  @click="emit('toggleBtn', id)"
+                  @click="emit('update:toggleBtn', id)"
                 />
               </template>
               <template v-else>
@@ -36,7 +35,7 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                   color="success"
                   density="compact"
                   icon="mdi-check-circle"
-                  @click="emit('toggleBtn', id)"
+                  @click="emit('update:toggleBtn', id)"
                 />
               </template>
               <div class="inputTag" v-if="editBool && id">
@@ -46,7 +45,7 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
                   @input="(e) => {
                     const target = e.target as HTMLInputElement;
                     if (target) {
-                      emit('updateText', id, target.value);
+                      emit('update:text', id, target.value);
                     }
                   }"
                   :class="{ 'custom-width': textValue, 'error': !textValue }"
@@ -60,12 +59,12 @@ const emit = defineEmits(['toggleBtn','deleteBtn','editBtn', 'updateText'])
             </div>
             <div class="d-flex justify-center ga-5">
               <template v-if="editBool">
-                <v-btn color="blue" variant="outlined" type="submit" value="flat" @click="() => textValue ? emit('editBtn', id) : null">保存</v-btn>
+                <v-btn color="blue" variant="outlined" type="submit" value="flat" @click="() => textValue ? emit('update:editBtn', id) : null">保存</v-btn>
               </template>
               <template v-else>
-                <v-btn color="blue" type="submit" value="flat" @click="emit('editBtn', id)">編集</v-btn>
+                <v-btn color="blue" type="submit" value="flat" @click="emit('update:editBtn', id)">編集</v-btn>
               </template>
-              <v-btn color="error" type="submit" @click="emit('deleteBtn', id)">削除</v-btn>
+              <v-btn color="error" type="submit" @click="emit('update:deleteBtn', id)">削除</v-btn>
             </div>
           </v-card>
         </template>

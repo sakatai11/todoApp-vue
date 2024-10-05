@@ -59,7 +59,7 @@ const editBtn = (id: number) => {
   const card = todoCards.value.find((card) => card.id === id)
   if (card) {
     card.editBool = !card.editBool
-    // card.textValue = newText
+
   }
   console.log(todoCards.value)
 }
@@ -77,8 +77,8 @@ const deleteBtn = (id: number) => {
       <v-container max-width="1000px">
         <TextField @handleSubmit="handleSubmit" />
         <div class="d-flex justify-center align-center flex-column flex-md-row">
-          <TodoList @toggle-btn="toggleBtn" @delete-btn="deleteBtn" @edit-btn="editBtn" @update-text="updateText" :todos="todoCards" />
-          <Completed @toggle-btn="toggleBtn" @delete-btn="deleteBtn" :todos="todoCards"  />
+          <TodoList @update:toggle-btn="toggleBtn" @update:delete-btn="deleteBtn" @update:edit-btn="editBtn" @update:text="updateText" :todos="todoCards" />
+          <Completed @update:toggle-btn="toggleBtn" @update:delete-btn="deleteBtn" :todos="todoCards"  />
         </div>
       </v-container>
     </v-main>
